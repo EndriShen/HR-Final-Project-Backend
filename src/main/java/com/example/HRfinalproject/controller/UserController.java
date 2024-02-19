@@ -27,12 +27,12 @@ public class UserController {
         return userService.createUser(user);
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<User> getUserByCredentials
-            (@RequestParam("username") String username,
-             @RequestParam("password") String password){
-        return userService.login(username,password);
-    }
+//    @GetMapping("/login")
+//    public ResponseEntity<User> getUserByCredentials
+//            (@RequestParam("username") String username,
+//             @RequestParam("password") String password){
+//        return userService.login(username,password);
+//    }
 
 //    @PostMapping("/login")
 //    public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest) {
@@ -44,6 +44,13 @@ public class UserController {
 //        }
 //    }
 
+    @GetMapping("/login")
+    public ResponseEntity<User> getUserByCredentials(
+            @RequestParam("username") String username,
+            @RequestParam("password") String password){
+        return userService.getUserByCredentials(username, password);
+    }
+
     @PatchMapping("/update/{id}")
     public ResponseEntity<UpdateUserRequest> updateUser
             (@PathVariable("id") Long id,
@@ -53,6 +60,15 @@ public class UserController {
     @DeleteMapping("delete/{id}")
     public ResponseEntity deleteUser(@PathVariable("id") Long id) throws UserNotFoundException {
         return userService.deleteUser(id);
+    }
+
+    @GetMapping("check-username")
+    public ResponseEntity<String> checkUsername(@RequestParam String username) {
+        if (userService.isUsernameUnique(username)) {
+            return ResponseEntity.ok("Username is unique.");
+        } else {
+            return ResponseEntity.badRequest().body("Username is already taken.");
+        }
     }
 
 //    @PostMapping("/register")

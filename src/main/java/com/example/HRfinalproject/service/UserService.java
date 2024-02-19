@@ -62,16 +62,29 @@ public class UserService {
 //        return null;
 //    }
 
-    public ResponseEntity<User> login(String username,String password){
-        Optional<User> userCredentials=userRepository.findByUsername(username);
-        if (userCredentials.isPresent()){
-            if(password == userCredentials.get().getPassword()) {
-                return ResponseEntity.ok(userCredentials.get());
-            }
+//    public ResponseEntity<User> login(String username,String password){
+//        Optional<User> userCredentials=userRepository.findByUsername(username);
+//        if (userCredentials.isPresent()){
+//            if(password == userCredentials.get().getPassword()) {
+//                return ResponseEntity.ok(userCredentials.get());
+//            }
+//        }
+//        return null;
+//    }
+
+    public ResponseEntity<User> getUserByCredentials(String username, String password) {
+        User user = userRepository.findByUsernameAndPassword(username, password);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
         }
-        return null;
     }
 
+    public boolean isUsernameUnique(String username) {
+        User user = userRepository.findByUsername(username);
+        return user == null;
+    }
 //    public User login(String username, String password) throws UserNotFoundException {
 //        Optional<User> optionalUser = userRepository.findByUsernameAndPassword(username, password);
 //        return optionalUser.orElseThrow(() -> new UserNotFoundException("Invalid credentials"));

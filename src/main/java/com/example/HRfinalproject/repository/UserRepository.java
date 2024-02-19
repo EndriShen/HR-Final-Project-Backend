@@ -11,11 +11,12 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByUsername(String username);
 
-//    Optional<User> findByUsernameAndPassword(String username, String password);
+    User findByUsername(String username);
 
-    @Query(nativeQuery = true, value = "SELECT u FROM user u WHERE u.username = :username AND u.password = :password")
-    Optional<User> findByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
+    User findByUsernameAndPassword(String username, String password);
+
+//    @Query(nativeQuery = true, value = "SELECT u FROM user u WHERE u.username = :username AND u.password = :password")
+//    Optional<User> findByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
 
 }
