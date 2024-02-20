@@ -16,6 +16,8 @@ import java.util.List;
 public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
     List<Timesheet> findByUser(User user);
 
+    List<Timesheet> findByUserId(Long userId);
+
 //    @Query("SELECT t FROM timesheet t " +
 //            "WHERE t.user.id = :userId " +
 //            "AND ((:fromDate BETWEEN t.fromDate AND t.toDate) " +

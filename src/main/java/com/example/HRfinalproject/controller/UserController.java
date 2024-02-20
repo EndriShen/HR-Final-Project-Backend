@@ -23,7 +23,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<CreateUserRequest> createUser(@RequestBody CreateUserRequest user) {
+    public ResponseEntity<CreateUserRequest> createUser(@RequestBody CreateUserRequest user) throws Exception {
         return userService.createUser(user);
     }
 
@@ -51,11 +51,12 @@ public class UserController {
         return userService.getUserByCredentials(username, password);
     }
 
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/update/{userId}/{managerId}")
     public ResponseEntity<UpdateUserRequest> updateUser
-            (@PathVariable("id") Long id,
-             @RequestBody UpdateUserRequest user) throws UserNotFoundException {
-        return userService.updateUser(id,user);
+            (@PathVariable("userId") Long userId,
+             @PathVariable("managerId") Long managerId,
+             @RequestBody UpdateUserRequest user) throws Exception {
+        return userService.updateUser(userId, managerId,user);
     }
     @DeleteMapping("delete/{id}")
     public ResponseEntity deleteUser(@PathVariable("id") Long id) throws UserNotFoundException {

@@ -4,6 +4,7 @@ import com.example.HRfinalproject.dto.userDto.CreateUserRequest;
 import com.example.HRfinalproject.dto.userDto.UpdateUserRequest;
 import com.example.HRfinalproject.entity.User;
 import com.example.HRfinalproject.enums.UserRoles;
+import com.example.HRfinalproject.exceptions.NotUniqueException;
 import com.example.HRfinalproject.exceptions.UserNotFoundException;
 import com.example.HRfinalproject.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -22,7 +24,10 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<CreateUserRequest> createUser(CreateUserRequest createdUser){
+    public ResponseEntity<CreateUserRequest> createUser(CreateUserRequest createdUser) throws Exception{
+        if(!isUsernameUnique(createdUser.getUsername())){
+            throw new NotUniqueException("Username must be unique");
+        }
         User newUser= User.builder()
                 .firstName(createdUser.getFirstName())
                 .lastName(createdUser.getLastName())
@@ -35,14 +40,33 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    public ResponseEntity<UpdateUserRequest> updateUser(Long id, UpdateUserRequest user) throws UserNotFoundException {
-        Optional<User> updatedUser=userRepository.findById(id);
-        if (updatedUser.isEmpty()){throw new EntityNotFoundException("User with id: "+id+"doesnt exist");}
+//    public ResponseEntity<UpdateUserRequest> updateUser(Long id, UpdateUserRequest user) throws UserNotFoundException {
+//        Optional<User> updatedUser=userRepository.findById(id);
+//        if (updatedUser.isEmpty()){throw new EntityNotFoundException("User with id: "+id+"doesnt exist");}
+//        else{
+//            updatedUser.get().setFirstName(user.getFirstName());
+//            updatedUser.get().setLastName(user.getLastName());
+//            updatedUser.get().setUsername(user.getUsername());
+//            userRepository.save(updatedUser.get());
+//            return ResponseEntity.status(HttpStatus.OK).body(user);
+//        }
+//    }
+
+    public ResponseEntity<UpdateUserRequest> updateUser(Long userId,Long managerId,UpdateUserRequest user) throws Exception {
+        Optional<User> userToBeUpdated=userRepository.findById(userId);
+        Optional<User> manager=userRepository.findById(managerId);
+        if (userToBeUpdated.isEmpty()){throw new EntityNotFoundException("User with id:"+userId+" doesnt exist");}
+        else if (manager.isEmpty()){throw new EntityNotFoundException("Manager with id:"+managerId+" doesnt exist");}
         else{
-            updatedUser.get().setFirstName(user.getFirstName());
-            updatedUser.get().setLastName(user.getLastName());
-            updatedUser.get().setUsername(user.getUsername());
-            userRepository.save(updatedUser.get());
+            if(!isUsernameUnique(userToBeUpdated.get().getUsername())){
+                throw new NotUniqueException("Username must be unique");
+            };
+            userToBeUpdated.get().setFirstName(user.getFirstName());
+            userToBeUpdated.get().setLastName(user.getLastName());
+            userToBeUpdated.get().setUsername(user.getUsername());
+            userToBeUpdated.get().setModifiedBy(manager.get().getUsername());
+            userToBeUpdated.get().setModifiedAt(LocalDate.now());
+            userRepository.save(userToBeUpdated.get());
             return ResponseEntity.status(HttpStatus.OK).body(user);
         }
     }
@@ -54,7 +78,33 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.OK).body("User Deleted");
     }
 
-//    public ResponseEntity<User> login(String username,String password){
+    public ResponseEntity<User> getUserByCredentials(String username, String password) {
+        User user = userRepository.findByUsernameAndPassword(username, password);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    public ResponseEntity<Integer> updateUserDaysOff(Long userId,Integer daysToBeRemoved) throws Exception {
+        Optional<User> user=userRepository.findById(userId);
+        if(user.isEmpty()){throw new UserNotFoundException(("User with id:"+userId+"doesnt exist"));}
+        user.get().setDaysOff(user.get().getDaysOff()-daysToBeRemoved);
+        userRepository.save(user.get());
+        return ResponseEntity.ok(user.get().getDaysOff());
+    }
+
+    public boolean isUsernameUnique(String username) {
+        User user = userRepository.findByUsername(username);
+        return user == null;
+    }
+
+    public Optional<User> getUserById(Long id){
+        return userRepository.findById(id);
+    }
+
+    //    public ResponseEntity<User> login(String username,String password){
 //        Optional<User> userCredentials=userRepository.findByUsernameAndPassword(username, password);
 //        if (userCredentials.isPresent()){
 //                return ResponseEntity.ok(userCredentials.get());
@@ -72,19 +122,6 @@ public class UserService {
 //        return null;
 //    }
 
-    public ResponseEntity<User> getUserByCredentials(String username, String password) {
-        User user = userRepository.findByUsernameAndPassword(username, password);
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    public boolean isUsernameUnique(String username) {
-        User user = userRepository.findByUsername(username);
-        return user == null;
-    }
 //    public User login(String username, String password) throws UserNotFoundException {
 //        Optional<User> optionalUser = userRepository.findByUsernameAndPassword(username, password);
 //        return optionalUser.orElseThrow(() -> new UserNotFoundException("Invalid credentials"));

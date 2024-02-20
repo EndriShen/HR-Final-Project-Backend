@@ -1,8 +1,6 @@
 package com.example.HRfinalproject.controller;
 
-import com.example.HRfinalproject.dto.timesheetDto.SaveTimesheetRequest;
-import com.example.HRfinalproject.dto.timesheetDto.UpdateTimesheetByManagerRequest;
-import com.example.HRfinalproject.dto.timesheetDto.UpdateTimesheetByUserRequest;
+import com.example.HRfinalproject.dto.timesheetDto.*;
 import com.example.HRfinalproject.entity.Timesheet;
 import com.example.HRfinalproject.entity.User;
 import com.example.HRfinalproject.exceptions.TimesheetNotFoundException;
@@ -24,20 +22,20 @@ public class TimesheetController {
     private TimesheetService timesheetService;
 
     @PostMapping("/create")
-    public ResponseEntity<SaveTimesheetRequest> createTimesheet(
+    public ResponseEntity<TimesheetResponse> createTimesheet(
             @RequestBody SaveTimesheetRequest timesheet){
         return timesheetService.createTimeSheet(timesheet);
     }
 
     @PatchMapping("/updateByUser/{id}")
-    public ResponseEntity<UpdateTimesheetByUserRequest> updateTimesheetUser(
-            @PathVariable("id") Long id,@RequestBody UpdateTimesheetByUserRequest timesheet) throws TimesheetNotFoundException {
+    public ResponseEntity<UpdateTimesheetResponse> updateTimesheetUser(
+            @PathVariable("id") Long id,@RequestBody UpdateTimesheetByUserRequest timesheet) throws Exception {
         return timesheetService.updateTimesheetUser(id, timesheet);
     }
 
     @PatchMapping("/updateByManager/{id}")
     public ResponseEntity<UpdateTimesheetByManagerRequest> updateTimesheetManager(
-            @PathVariable("id") Long id,@RequestBody UpdateTimesheetByManagerRequest timesheet) throws TimesheetNotFoundException {
+            @PathVariable("id") Long id,@RequestBody UpdateTimesheetByManagerRequest timesheet) throws Exception {
         return timesheetService.updateTimesheetManager(id, timesheet);
     }
 
@@ -48,6 +46,12 @@ public class TimesheetController {
     @GetMapping("/user/{id}")
     public ResponseEntity<List<Timesheet>> getTimeSheetsByUserId(@PathVariable("id")Long userId){
         return timesheetService.getTimesheetsByUserId(userId);
+    }
+
+    @GetMapping("/all-timesheets")
+    public ResponseEntity<List<Timesheet>> getAllTimesheets() {
+        List<Timesheet> timesheets = timesheetService.getAllTimesheets();
+        return ResponseEntity.ok(timesheets);
     }
 
 //    @PostMapping("/create")
