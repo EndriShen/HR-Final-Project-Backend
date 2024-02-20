@@ -63,11 +63,14 @@ public class UserController {
     }
 
     @GetMapping("check-username")
-    public ResponseEntity<String> checkUsername(@RequestParam String username) {
+    public boolean isUsernameTaken(@RequestParam String username) {
+        boolean isUsernameTaken = true;
         if (userService.isUsernameUnique(username)) {
-            return ResponseEntity.ok("Username is unique.");
+            return !isUsernameTaken;
+            //return ResponseEntity.ok("Username is unique.");
         } else {
-            return ResponseEntity.badRequest().body("Username is already taken.");
+            return isUsernameTaken;
+            //return ResponseEntity.badRequest().body("Username is already taken.");
         }
     }
 
