@@ -135,7 +135,7 @@ public class TimesheetService {
 
         // Ensure toDate is after fromDate
         if (toDate.isBefore(fromDate)) {
-            return ResponseEntity.badRequest().body(new UpdateTimesheetResponse(null, "ToDate must be after FromDate."));
+            return ResponseEntity.badRequest().body(new UpdateTimesheetResponse(null, "To-Date must be after From-Date."));
         }
 
         // Ensure timesheet dates are within the current year
@@ -219,10 +219,10 @@ public class TimesheetService {
     public ResponseEntity deleteTimesheet(Long id) throws TimesheetNotFoundException {
         Optional<Timesheet> deleteTimesheet = timesheetRepository.findById(id);
         if (deleteTimesheet.isEmpty()) {
-            throw new EntityNotFoundException("Time Sheet with id: " + id + " doesnt exist");
+            throw new TimesheetNotFoundException("Time Sheet with id: " + id + " doesnt exist");
         }
         timesheetRepository.deleteById(id);
-        return ResponseEntity.ok().body("Timesheet Deleted");
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<List<Timesheet>> getTimesheetsByUserId(Long userId){

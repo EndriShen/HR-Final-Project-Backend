@@ -2,6 +2,7 @@ package com.example.HRfinalproject.service;
 
 import com.example.HRfinalproject.dto.userDto.CreateUserRequest;
 import com.example.HRfinalproject.dto.userDto.UpdateUserRequest;
+import com.example.HRfinalproject.entity.Timesheet;
 import com.example.HRfinalproject.entity.User;
 import com.example.HRfinalproject.enums.UserRoles;
 import com.example.HRfinalproject.exceptions.NotUniqueException;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -102,6 +104,10 @@ public class UserService {
 
     public Optional<User> getUserById(Long id){
         return userRepository.findById(id);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     //    public ResponseEntity<User> login(String username,String password){

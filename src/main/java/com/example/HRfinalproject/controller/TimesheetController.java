@@ -2,15 +2,11 @@ package com.example.HRfinalproject.controller;
 
 import com.example.HRfinalproject.dto.timesheetDto.*;
 import com.example.HRfinalproject.entity.Timesheet;
-import com.example.HRfinalproject.entity.User;
 import com.example.HRfinalproject.exceptions.TimesheetNotFoundException;
-import com.example.HRfinalproject.exceptions.UserNotFoundException;
 import com.example.HRfinalproject.service.TimesheetService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
