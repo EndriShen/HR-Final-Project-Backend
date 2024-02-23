@@ -34,12 +34,4 @@ public class ExceptionHandlers {
                 HttpStatus.NOT_FOUND
         );
     }
-
-    @ExceptionHandler({OverlappingTimesheetsException.class})
-    private ResponseEntity<ApiError> handleOverlappingTimesheetsException(OverlappingTimesheetsException overlappingException){
-        return new ResponseEntity<>(
-                new ApiError(overlappingException.getMessage(), "400"),
-                HttpStatus.BAD_REQUEST
-        );
-    }
 }

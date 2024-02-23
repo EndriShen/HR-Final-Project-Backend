@@ -7,6 +7,7 @@ import com.example.HRfinalproject.service.TimesheetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -39,6 +40,7 @@ public class TimesheetController {
     public ResponseEntity deleteTimesheet(@PathVariable("id") Long id) throws TimesheetNotFoundException {
         return timesheetService.deleteTimesheet(id);
     }
+
     @GetMapping("/user/{id}")
     public ResponseEntity<List<Timesheet>> getTimeSheetsByUserId(@PathVariable("id")Long userId){
         return timesheetService.getTimesheetsByUserId(userId);
@@ -49,14 +51,4 @@ public class TimesheetController {
         List<Timesheet> timesheets = timesheetService.getAllTimesheets();
         return ResponseEntity.ok(timesheets);
     }
-
-//    @PostMapping("/create")
-//    public Timesheet createTimesheet(@RequestBody Timesheet timesheet) {
-//        return timesheetService.createTimesheet(timesheet);
-//    }
-//
-//    @GetMapping("/{userId}")
-//    public List<Timesheet> getTimesheetsByUserId(@PathVariable Long userId) throws UserNotFoundException {
-//        return timesheetService.getTimesheetsByUserId(userId);
-//    }
 }

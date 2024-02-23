@@ -1,34 +1,33 @@
 package com.example.HRfinalproject.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@Data
-//@MappedSuperclass
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@MappedSuperclass
+@SuperBuilder
 public class BaseEntity {
-//    @Column(name = "createdAt")
-//    private LocalDate createdAt;
-//
-//    @Column(name = "createdBy")
-//    private String createdBy;
-//
-//    @Column(name = "modifiedAt")
-//    private LocalDate modifiedAt;
-//
-//    @Column(name = "modifiedBy")
-//    private String modifiedBy;
-//
-//    public BaseEntity(LocalDate createdAt, String createdBy,LocalDate modifiedAt, String modifiedBy){
-//        this.createdAt = createdAt;
-//        this.createdBy = createdBy;
-//        this.modifiedAt = modifiedAt;
-//        this.modifiedBy = modifiedBy;
-//    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(name = "createdAt", nullable = false)
+    private LocalDate createdAt;
+
+    @Column(name ="createdBy", length = 45, nullable = false)
+    private String createdBy;
+
+    @Column(name = "modifiedAt", nullable = false)
+    private LocalDate modifiedAt;
+
+    @Column(name = "modifiedBy", length = 45, nullable = false)
+    private String modifiedBy;
+
 }

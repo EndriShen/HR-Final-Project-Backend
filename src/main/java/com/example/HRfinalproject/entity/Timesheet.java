@@ -7,7 +7,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -16,11 +15,7 @@ import java.util.Date;
 @SuperBuilder
 @Entity
 @Table(name = "timesheet")
-public class Timesheet {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+public class Timesheet extends BaseEntity{
 
     @Column(name = "fromDate", nullable = false)
     private LocalDate fromDate;
@@ -35,32 +30,9 @@ public class Timesheet {
     @Column(name = "note")
     private String note;
 
-    @Column(name = "createdAt", nullable = false)
-    private LocalDate createdAt;
-
-    @Column(name ="createdBy", length = 45, nullable = false)
-    private String createdBy;
-
-    @Column(name = "modifiedAt", nullable = false)
-    private LocalDate modifiedAt;
-
-    @Column(name = "modifiedBy", length = 45, nullable = false)
-    private String modifiedBy;
-
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, optional = false)
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable=false)
     private User user;
 
-    public Timesheet(LocalDate fromDate, LocalDate toDate, StatusType status, String note, User user, LocalDate createdAt, String createdBy, LocalDate modifiedAt, String modifiedBy){
-        this.fromDate = fromDate;
-        this.toDate = toDate;
-        this.status = status;
-        this.note = note;
-        this.user = user;
-        this.createdAt = createdAt;
-        this.createdBy = createdBy;
-        this.modifiedAt = modifiedAt;
-        this.modifiedBy = modifiedBy;
-    }
 }
