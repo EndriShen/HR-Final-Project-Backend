@@ -120,6 +120,7 @@ public class TimesheetService {
 
     public ResponseEntity<UpdateTimesheetResponse> updateTimesheetUser(Long id, UpdateTimesheetByUserRequest timesheet) throws Exception {
         Optional<Timesheet> optionalUpdatedTimesheet = timesheetRepository.findById(id);
+
         if (optionalUpdatedTimesheet.isEmpty()) {
             throw new TimesheetNotFoundException("Time Sheet with id: " + id + " doesn't exist");
         }

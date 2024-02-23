@@ -37,6 +37,9 @@ public class UserService {
                 .password(createdUser.getPassword())
                 .role(UserRoles.USER)
                 .createdAt(LocalDate.now())
+                .createdBy(createdUser.getUsername())
+                .modifiedAt(LocalDate.now())
+                .modifiedBy(createdUser.getUsername())
                 .daysOff(20).build();
         userRepository.save(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
@@ -57,12 +60,9 @@ public class UserService {
     public ResponseEntity<UpdateUserRequest> updateUser(Long userId,Long managerId,UpdateUserRequest user) throws Exception {
         Optional<User> userToBeUpdated=userRepository.findById(userId);
         Optional<User> manager=userRepository.findById(managerId);
-        if (userToBeUpdated.isEmpty()){throw new EntityNotFoundException("User with id:"+userId+" doesnt exist");}
-        else if (manager.isEmpty()){throw new EntityNotFoundException("Manager with id:"+managerId+" doesnt exist");}
-        else{
-            if(!isUsernameUnique(userToBeUpdated.get().getUsername())){
-                throw new NotUniqueException("Username must be unique");
-            };
+        if (userToBeUpdated.isEmpty()){throw new UserNotFoundException("User with id:"+userId+" doesnt exist");}
+        else if (manager.isEmpty()){throw new UserNotFoundException("Manager with id:"+managerId+" doesnt exist");}
+        else {
             userToBeUpdated.get().setFirstName(user.getFirstName());
             userToBeUpdated.get().setLastName(user.getLastName());
             userToBeUpdated.get().setUsername(user.getUsername());
