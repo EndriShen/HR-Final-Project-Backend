@@ -160,6 +160,9 @@ public class TimesheetService {
                 user.setDaysOff(user.getDaysOff() - businessDays);
                 userRepository.save(user);
             }
+            else {
+                return ResponseEntity.unprocessableEntity().build();
+            }
         }
 
         return ResponseEntity.ok(timesheet);
