@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,7 +77,7 @@ public class TimesheetService {
         return ResponseEntity.ok(new TimesheetResponse(timesheetRequest, null));
     }
 
-    public ResponseEntity<UpdateTimesheetResponse> updateTimesheetUser(Long id, UpdateTimesheetByUserRequest timesheet) throws Exception {
+    public ResponseEntity<UpdateTimesheetResponse> updateTimesheetUser(Long id, UpdateTimesheetByUserRequest timesheet) throws Exception{
         Optional<Timesheet> optionalUpdatedTimesheet = timesheetRepository.findById(id);
 
         if (optionalUpdatedTimesheet.isEmpty()) {
